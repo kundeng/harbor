@@ -1,0 +1,39 @@
+version: 1
+profiles:
+  default:
+    services: ["litellm", "webui"]
+    options: ["*"]
+source:
+  rules:
+    autoCapabilities: true
+    base: ["compose.yml"]
+    include:
+      - "compose.${service}.yml"
+      - "compose.*.${option}.yml"
+      - "compose.x.${service}.${option}.yml"
+prepare:
+  env:
+    sources:
+      - { type: sys, file: "harbor2/etc/sys.env", optional: true }
+      - { type: site, file: "harbor2/etc/site.env", optional: true }
+      - { type: service, dir: "harbor2/stacks", pattern: "service.env", optional: true }
+      - { type: dotenv, file: ".env.local", optional: true }
+      - { type: secrets, file: "override.secrets.env", optional: true }
+      # - { type: sops, file: "secrets.sops.env", optional: true }
+  templates:
+    - { from: "harbor2/stacks/${service}/templates/**", to: "harbor2/var/run/${service}/config/" }
+  interpolation:
+    engine: handlebars
+    values:
+      fromEnv: true
+      extra:
+        TRAEFIK_TLS: "true"
+deploy:
+  steps:
+    - { action: "compose.up" }
+post_deploy:
+  steps:
+    - { action: "open", target: ["litellm", "webui"] }
+destroy:
+  steps:
+    - { action: "compose.down" }
