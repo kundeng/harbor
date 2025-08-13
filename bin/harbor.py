@@ -8,7 +8,7 @@ app = typer.Typer(help="Harbor v2 CLI (Python)")
 def run(stage: str = typer.Argument(..., help="Stage to run: source|prepare|deploy|post_deploy|destroy"),
         profile: str = typer.Option("default", help="Profile name")):
     """Dispatch to stage executors (skeleton)."""
-    from core import descriptor, source, prepare
+    from app import descriptor, source, prepare
     d = descriptor.load("harbor2/etc/harbor.yaml")
     descriptor.validate(d)
     if stage == "source":
