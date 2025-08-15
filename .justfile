@@ -10,13 +10,13 @@ default:
 
 # Build the runner image
 build-runner:
-	docker build -f Dockerfile.runner -t {{runner_image}} .
+	docker build -f etc/runner/Dockerfile -t {{runner_image}} .
 
 # Internal: ensure runner image exists
 _ensure-runner:
 	@if ! docker image inspect {{runner_image}} >/dev/null 2>&1; then \
 		echo "[harbor2] Building runner image {{runner_image}}..."; \
-		docker build -f Dockerfile.runner -t {{runner_image}} .; \
+		docker build -f etc/runner/Dockerfile -t {{runner_image}} .; \
 	fi
 
 # Run arbitrary CLI inside runner (pass args after --)
@@ -28,7 +28,7 @@ py *args:
 		--network host \
 		-e AGE_PRIVATE_KEY \
 		{{runner_image}} \
-		python -m lib.cli {{args}}
+		python -m etc.lib.cli {{args}}
 
 # Convenience targets
 source profile="default":

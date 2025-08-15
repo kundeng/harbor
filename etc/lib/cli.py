@@ -9,7 +9,7 @@ def run(stage: str = typer.Argument(..., help="Stage to run: source|prepare|depl
         profile: str = typer.Option("default", help="Profile name")):
     """Dispatch to stage executors (skeleton)."""
     from app import descriptor, source, prepare
-    d = descriptor.load("harbor2/etc/harbor.yaml")
+    d = descriptor.load("etc/harbor.yaml")
     descriptor.validate(d)
     if stage == "source":
         out = source.execute(profile, d)
