@@ -181,6 +181,7 @@ harbor2/
     secrets.py            # SOPS/Age helpers (future)
     hooks.py              # hooks execution (future)
   etc/
+    stacks/               # consolidated service compose files (base + overlays)
     harbor.yaml           # system-level descriptor (per deployment)
     sys.env               # system env defaults (optional)
     site.env              # site env overrides (optional)
