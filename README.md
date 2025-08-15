@@ -1,3 +1,33 @@
+# Harbor v2 (Python) — v2 branch
+ 
+Harbor v2 is migrating to a Python core and CLI executed inside an ephemeral runner container.
+This branch reflects the new layout and entrypoint. Legacy Harbor v1 content remains below.
+ 
+- Structure
+  - Python core: `etc/lib/`
+  - Stacks: `etc/stacks/` (per-service folders) + flat compose overlays in `etc/stacks/`
+  - Runner Dockerfile: `etc/runner/Dockerfile`
+  - Entry wrapper: `bin/justfile` (root-aware)
+ 
+- Quickstart
+  - Requirements: Docker + `just`
+  - Build runner image:
+    ```sh
+    just -f bin/justfile build-runner
+    ```
+  - Run stages via containerized CLI:
+    ```sh
+    just -f bin/justfile source --profile default
+    just -f bin/justfile prepare --profile default
+    just -f bin/justfile deploy --profile default
+    ```
+  - Arbitrary CLI (passes args to `python -m etc.lib.cli`):
+    ```sh
+    just -f bin/justfile py -- run --help
+    ```
+ 
+---
+ 
 ![Harbor project logo](https://github.com/av/harbor/raw/main/docs/harbor-2.png)
 
 [![GitHub Tag](https://img.shields.io/github/v/tag/av/harbor)](https://github.com/av/harbor/releases)

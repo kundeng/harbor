@@ -1,3 +1,21 @@
+# Harbor v2 (Python) — Release Notes
+ 
+ This branch migrates Harbor to a Python core executed inside a runner container.
+ Use these steps during the v2 sprints. Legacy v1 guidance remains below.
+ 
+ - Build runner image
+   ```sh
+   just -f bin/justfile build-runner
+   ```
+ - Tag and changelog (manual for now)
+   - Versioning: annotate in commit and update CHANGE summary in this file
+   - Tag on `v2` branch: `git tag -a v2.<x> -m "Harbor v2 <x>" && git push --tags`
+ - Docs
+   - README updated with v2 structure (etc/lib, etc/stacks, etc/runner, bin/justfile)
+   - Export ConPort snapshot for records: see `conport_export/`
+ 
+ ---
+ 
 ### Releasing Harbor
 
 This is a helper documentation on release workflow.

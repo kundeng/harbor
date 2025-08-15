@@ -2,7 +2,9 @@
 
 # Variables
 runner_image := "harbor2-runner:local"
-workspace := "$(pwd)"
+# Compute project root based on this justfile's directory
+# Works when invoked from anywhere inside the repo
+project_root := `cd "{{justfile_directory()}}/.." && pwd`
 
 # Default help
 default:
@@ -10,21 +12,21 @@ default:
 
 # Build the runner image
 build-runner:
-	docker build -f etc/runner/Dockerfile -t {{runner_image}} .
+	docker build -f {{project_root}}/etc/runner/Dockerfile -t {{runner_image}} {{project_root}}
 
 # Internal: ensure runner image exists
 _ensure-runner:
 	@if ! docker image inspect {{runner_image}} >/dev/null 2>&1; then \
 		echo "[harbor2] Building runner image {{runner_image}}..."; \
-		docker build -f etc/runner/Dockerfile -t {{runner_image}} .; \
+		docker build -f {{project_root}}/etc/runner/Dockerfile -t {{runner_image}} {{project_root}}; \
 	fi
 
 # Run arbitrary CLI inside runner (pass args after --)
 py *args:
 	@just _ensure-runner
 	docker run --rm \
-		-v {{workspace}}:/workspace \
-		-w /workspace/harbor2 \
+		-v {{project_root}}:/workspace \
+		-w /workspace \
 		--network host \
 		-e AGE_PRIVATE_KEY \
 		{{runner_image}} \
